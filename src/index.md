@@ -199,6 +199,8 @@ Veja que a partir do número 3 você pode colocar os dois itens diponíveis, já
 
 ???
 
+Você conseguiu entender a montagem da linha e as cores? Se não entendeu, preste atenção agora. Como falamos, sempre comparamos dois valores para obter a solução do subproblema. Em laranja, na linha anterior à que estamos completando, temos o valor da máxima capacidade sem considerar o item. Em azul, também na linha anterior, temos o valor da máxima capacidade restante da mochila, considerando que colocamos o item da linha que estamos completando. Então, ao comparar o valor laranja (sem considerar o item) com o valor azul somado ao valor do item, escolhemos o maior para preencher a tabela.
+
 Agora que ja entendemos o raciocínio por trás de cada subproblema, basta irmos adicionando um novo item até que todos sejam considerados no problema! fácil não?
 
 ??? Checkpoint:
