@@ -146,7 +146,20 @@ O item pode ser inserido quando `a capacidade >= peso do item (2)`, ou seja, a p
 
 ???
 
-Está com a memória boa? Lembra que falei que as próximas soluções vão depender das anteriores? Bom, vamos montar uma tabela que contenha as soluções anteriores. Essa eu vou dar de mão beijada, mas nas próximas você terá que fazer.
+
+Assim, podemos começar a popular a nossa tabela ("i" linhas por "j" colunas). Para isso, precisamos deixar algumas coisas claras antes.
+
+Antes de mais nada (vamos reforçar, mas já deve estar claro aqui), quando se tem um item, só existem 2 opções a serem realizadas: incluir o item na mochila, ou não. Com isso em mente, devemos agora comparar o máximo valor que se consegue obter com e sem o item, para ver se vale a pena sua inserção.
+
+Começando pelo caso mais simples - o máximo valor que se consegue obter sem o item (vamos chamar ele de item "i"). Esse valor vai ser encontrado na linha i-1, coluna j. A razão disso é a seguinte: o máximo valor que conseguimos obter com os itens 1, 2, 3, ... i, é obviamente o mesmo valor máximo que conseguimos com os itens 1, 2, 3, ... i, se escolhermos **não** incluir o item "i". Pare e pense nisso por um momento - sim, é bastante informação.
+
+Pronto para o próximo caso?
+
+Agora, precisamos calcular qual é o máximo valor que conseguimos obter incluindo o item "i". Para isso, precisamos comparar o peso do item "i" com a capacidade da mochila. Obviamente, se o peso do item "i" for maior do que a capacidade, não podemos incluir ele. Assim, a solução para esse subproblema é simplesmente o máximo valor que se consegue obter sem o item "i" (ou seja, o valor da linha de cima, na mesma coluna).
+
+Porém, suponha que o item "i" pese menos do que a capacidade da mochila. Nesse caso, temos a opção de incluí-lo, se ele potencialmente aumentar máximo valor obtido. Esse máximo valor obtido com a inclusão do item "i" é o **próprio valor do item "i" + o máximo valor que se consegue obter com o resto da capacidade da mochila**. Difícil?
+
+Vamos para um exemplo para deixar isso mais claro.
 
 ![](tabela1exemplo.png)
 
@@ -168,7 +181,7 @@ Você consegue montar uma nova tabela considerando o 2º item? faça isso!
 
 ::: Resposta:
 
-![](tabela2exemplo.png)
+:Linha2
 
 Veja que a partir do número 3 você pode colocar os dois itens diponíveis, já que a soma de seus pesos resulta exatamente em 3kg.
 
@@ -193,7 +206,7 @@ Monte como ficaria a tabela dos maiores valores possíveis para cada situação.
   
 ::: Resposta:
 
-:montagem
+:montagem046
 
 :::
 
