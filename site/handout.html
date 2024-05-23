@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Problema da Mochila Binária (0/1 Knapsack)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Open+Sans+Condensed:ital,wght@0,300;1,300&family=Open+Sans:ital,wght@0,300;0,400;0,700;0,800;1,300;1,400;1,700;1,800&family=Oxygen+Mono&family=Josefin+Sans:ital,wght@0,200;0,600;1,200;1,600&display=swap">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/highlight.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/color.css">
+    <!--<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>-->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+    <script src="assets/js/highlight.js"></script>
+    <script src="assets/js/script.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <a href="">abrir tudo</a>
+            <a href="">fechar tudo</a>
+        </header>
+        <main>
+
+            <h1>Problema da Mochila Binária (0/1 Knapsack)</h1>
+<h2>Objetivos</h2>
+<p>Ao final desta aula, você deveria ser capaz de:</p>
+<ol>
+<li>Entender o conceito do problema da mochila binária.</li>
+<li>Aplicar métodos de programação dinâmica para resolver o problema.</li>
+<li>Analisar a complexidade de tempo e espaço das soluções.</li>
+</ol>
+<h2>Vamos ao que interessa: o que é o problema da mochila binária?</h2>
+<p>Imagine que você vai fazer uma viagem com a sua família. Para isso, você precisa fazer sua mala, mas para caber no carro, seus pais te pedem para colocar somente o essencial dentro da mala. Assim, sabendo que a capacidade máxima que sua mala aguenta é de 15kg, você seleciona o mais importante para a viagem (considerando que cada item tem seu valor de acordo com sua importância - por exemplo um caderno com as anotações de todos os handouts de DesProg tem um valor muuuito maior do que os handouts de qualquer outra matéria) e pé na estrada!</p>
+<p>Isso que acontece com o <code class="language-problema">problema da mochila binária</code>: ele surge com a necessidade de empacotar um conjunto de itens com valores e tamanhos específicos (como pesos ou volumes) em um contêiner com capacidade máxima. Com isso, o objetivo dele é escolher um subconjunto dos itens de valor total máximo que cabem no contêiner. Difícil? Observe na imagem abaixo uma representação desse problema:</p>
+<figure class="img"><img src="img/knapsack.png" alt=""></figure>
+<blockquote class="question">
+<p>Pergunta</p>
+<p>Para ver se você está entendendo, considere uma mochila com <strong>capacidade de 6 kg</strong>, e a seguinte lista de itens, cada um com seu respectivo valor (esse é só pra ver se você está acordado):</p>
+<figure class="table"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Peso</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>10</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1</td>
+<td>5</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>8</td>
+</tr>
+<tr>
+<td>4</td>
+<td>6</td>
+<td>15</td>
+</tr>
+<tr>
+<td>5</td>
+<td>3</td>
+<td>7</td>
+</tr>
+</tbody>
+</table></figure>
+<p>Quais são os itens selecionados para compor a mochila para atingir o valor máximo considerando que o peso não pode passar de 6 kg?</p>
+<details class="answer">
+<summary>Resposta:</summary>
+<ul>
+<li>Os itens selecionados são: <code class="terminal nohighlight">1</code>, e <code class="terminal nohighlight">3</code>.</li>
+<li>A soma dos valores dessa seleção é: <code class="terminal nohighlight">18</code>.</li>
+<li>O peso total dessa seleção é: <code class="language-6">kg</code>.</li>
+</ul>
+</details>
+</blockquote>
+<p>Moleza, não? Se você é curioso e tentou resolver o problema da imagem lá em cima, deve ter percebido que o objeto de maior valor é leve, então é incluido na solução. Por outro lado, no exercício, o objeto de maior valor é pesado e não é incluido na resolução, já que existe uma combinação melhor de itens. Então, nem sempre o objeto de maior valor vão ser incluidos: temos que olhar para peso e valor conjuntamente. Pena que agora complica um pouco… Mas, vamos entender um algoritmo que vai fazer isso por nós.</p>
+<h2>Um jeito simples, mas demorado (Força Bruta)</h2>
+<p>Como o próprio nome diz, vamos usar mais força e menos razão. Como fariamos para isso? Simplesmente teriamos que verificar todas as combinações possíveis de itens, verificando quais caberiam na mochila e teriam a maior soma de valores.</p>
+<p>Esse algoritmo ficaria mais ou menos assim:</p>
+<pre><code class="terminal nohighlight">função mochila_binaria_forca_bruta(items, capacidade):
+    melhor_valor = 0
+    melhor_combinação = null
+    para cada combinação de itens:
+        peso_total = soma dos pesos dos itens na combinação
+        valor_total = soma dos valores dos itens na combinação
+        se peso_total &lt;= capacidade e valor_total &gt; melhor_valor:
+            melhor_valor = valor_total
+            melhor_combinação = combinação
+    retorna melhor_valor, melhor_combinação
+</code></pre>
+<p>Pense nisso com um conjunto de dados grande. Você já deve estar imaginando que esse algoritmo exige muito poder computacional, e é inviável nessa situação.</p>
+<blockquote class="question">
+<p>Para estimular o cérebro:</p>
+<p>Você saberia dizer qual a complexidade desse código?</p>
+<p>Dica: Temos n itens e cada item só tem 2 opções: pode ser pego ou não.</p>
+<details class="answer">
+<summary>Resposta:</summary>
+<p>O(2ˆn)</p>
+</details>
+</blockquote>
+<h2>Um jeito melhor (nosso foco) - Programação Dinâmica</h2>
+<p>Para resolver esse problema, vamos decompor em subproblemas menores. Você pode pensar que selecionaremos subconjuntos em mochilas menores e que vamos armazenar esses resultados. A ideia aqui é que a melhor solução para esse problema completo depende das melhores soluções para os subproblemas, que são mais fáceis de resolver.</p>
+<p>Vamos voltar ao exemplo que você fez acima para entender como é construído o raciocínio. Lembrando que são <strong>5 itens</strong> e a capacidade da mochila é <strong>6 kg</strong> (itens abaixo):</p>
+<figure class="table"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Peso</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td>2</td>
+<td>10</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>1</td>
+<td>5</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>4</td>
+<td>8</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>6</td>
+<td>15</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>3</td>
+<td>7</td>
+</tr>
+</tbody>
+</table></figure>
+<blockquote class="question">
+<p>Checkpoint:</p>
+<p>Considerando o exemplo, vamos pensar no primeiro subproblema.</p>
+<p>a) Você consegue dizer qual é o subproblema mais simples?</p>
+<p>Dica: considere a maior redução possível na capacidade da mochila e no número de itens. O problema deve ficar extremamente simples!</p>
+<p>b) Considerando esse subproblema, quantos e quais itens você levaria na mochila? (Se você não entendeu o item a, pode dar uma espiada em baixo, mas tente não ver a b)</p>
+<details class="answer">
+<summary>Resposta:</summary>
+<p>a) O subproblema mais simples tem:</p>
+<ul>
+<li>Capacidade máxima da mochila = 0.</li>
+<li>Número de itens disponíveis = 0.</li>
+</ul>
+<p>b) Aí o problema ficou simples demais… Se conseguiu fazer o item a, conseguiu o b também. Nesse caso a melhor solução não leva nenhum item. Guarde isso na memória!</p>
+</details>
+</blockquote>
+<p>Concluindo a partir do exercício, quando a capacidade da mochila é 0, você não pode levar nenhum item. E quando o número de itens disponíveis é zero… bom, já sabe né? Vá comprar suas coisas para a viagem.</p>
+<p>Vamos, agora, para um segundo subproblema, um pouco mais complexo.</p>
+<blockquote class="question">
+<p>Checkpoint:</p>
+<p>Considere somente o primerio item como disponível:</p>
+<figure class="table"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Peso</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td>2</td>
+<td>10</td>
+</tr>
+</tbody>
+</table></figure>
+<p>Incrementando em 1 kg a capacidade da mochila de 0 à capacidade da máxima (6), a partir de qual capacidade seria possível inserir esse item?</p>
+<details class="answer">
+<summary>Resposta:</summary>
+<p>O item pode ser inserido quando <code class="language-a">capacidade &gt;= peso do item (2)</code>, ou seja, a partir da capacidade de 2kg. Guarde novamente na memória!</p>
+</details>
+</blockquote>
+<p>Está com a memória boa? Lembra que falei que as próximas soluções vão depender das anteriores? Bom, vamos montar uma tabela que contenha as soluções anteriores. Essa eu vou dar de mão beijada, mas nas próximas você terá que fazer.</p>
+<p>IMAGEM DA TABELA</p>
+<p>Vamos avançar um pouco mais agora.</p>
+<blockquote class="question">
+<p>Checkpoint:</p>
+<p>Considere tambem o segundo item como disponível:</p>
+<figure class="table"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Peso</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td>2</td>
+<td>10</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>1</td>
+<td>5</td>
+</tr>
+</tbody>
+</table></figure>
+<p>Você consegue montar uma nova tabela considerando o 2º item? faça isso!</p>
+<details class="answer">
+<summary>Resposta:</summary>
+<p>IMAGEM DA TABELA</p>
+</details>
+</blockquote>
+<p>Agora que ja entendemos o raciocínio por trás de cada subproblema, basta irmos adicionando um novo item até que todos sejam considerados no problema! fácil não?</p>
+<blockquote class="question">
+<p>Checkpoint:</p>
+<p>Considere todos os items do problema disponíveis:</p>
+<figure class="table"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Peso</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td>2</td>
+<td>10</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>1</td>
+<td>5</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>4</td>
+<td>8</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>6</td>
+<td>15</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>3</td>
+<td>7</td>
+</tr>
+</tbody>
+</table></figure>
+<p>Monte como ficaria a tabela dos maiores valores possíveis para cada situação.</p>
+<details class="answer">
+<summary>Resposta:</summary>
+<p>IMAGEM DA TABELA com animação</p>
+</details>
+</blockquote>
+<h2>Transformando em código</h2>
+<p>Vamos transformar agora toda essa lógica que vimos em código. Lembremos de algumas coisas:</p>
+<ul>
+<li>
+<p>A função <code class="terminal nohighlight">mochila_binaria()</code> deve receber como argumentos:</p>
+<ul>
+<li>A capacidade máxima da mochila (<code class="language-int">capacidade</code>)</li>
+<li>Uma lista com os pesos de cada item (<code class="language-int">pesos[]</code>)</li>
+<li>Uma lista com os valores de cada item (<code class="language-int">valores[]</code>)
+<ul>
+<li>Lembre-se que o mesmo item terá o mesmo índice nas listas de pesos e valores</li>
+</ul>
+</li>
+<li>O número total de itens (<code class="language-int">n</code>)</li>
+</ul>
+</li>
+<li>
+<p>A função <code class="terminal nohighlight">mochila_binaria()</code> deve imprimir:</p>
+<ul>
+<li>A soma dos valores dos itens incluidos</li>
+<li>Uma lista dos índices dos itens selecionados</li>
+</ul>
+</li>
+</ul>
+<blockquote class="question">
+<p>Checkpoint:</p>
+<p>Considere a seguinte função a ser preenchida:</p>
+<pre><code class="language-c">void mochila_binaria(int capacidade, int pesos[], int valores[], int n) {
+    // Vamos preencher isso aqui!
+}
+</code></pre>
+<p>ACHO Q A PRIMEIRA COISA SERIA PREENCHER A TABELA</p>
+<details class="answer">
+<summary>Resposta:</summary>
+<p>IMAGEM DA TABELA com animação</p>
+</details>
+</blockquote>
+<pre><code class="terminal nohighlight">função mochila_binaria_pd(items, capacidade):
+    n = número de itens
+    dp = matriz de tamanho (n+1) x (capacidade+1) inicializada com 0
+    para i de 1 até n:
+        para w de 0 até capacidade:
+            se peso[i-1] &lt;= w:
+                dp[i][w] = máximo(dp[i-1][w], valor[i-1] + dp[i-1][w-peso[i-1]])
+            senão:
+                dp[i][w] = dp[i-1][w]
+    retorna dp[n][capacidade]
+</code></pre>
+<p>Esse algoritmo é muito mais eficiente do que o da força bruta. Já usamos a programação dinâmica em uma APS!</p>
+<blockquote class="question">
+<p>Vamos lá, agora um pouco mais complexo.</p>
+<p>Tente entender qual a complexidade do pseudocódigo acima.</p>
+<p>Dica: O que vamos preencher para armazenar os valores?</p>
+<details class="answer">
+<summary>Resposta:</summary>
+<p>Se você pensou em O(nXw), sendo n o número de itens e w a capacidade, você está correto. É um algotirmo bem melhor.</p>
+</details>
+</blockquote>
+<p>Então agora como ficaria o código completo do problema da mochila binária?</p>
+<blockquote class="question">
+<p>Checkpoint:</p>
+<p>Agora é com você! Aplique tudo que você aprendeu neste handout e faça o código da mochila binária(considere que a entrada seria um vetor com os valores, um vetor com os pesos e um inteiro que seria a capacidade máxima)</p>
+<p>Dica: Você pode criar uma função auxiliar para ajudar a escolher o máximo entre dois valores.</p>
+<details class="answer">
+<summary>Resposta:</summary>
+<p>int max(int a, int b) {
+return (a &gt; b) ? a : b;
+}</p>
+<p>int knapsack(int W, int wt[], int val[]) {
+int i, w;
+int n = sizeof(val);
+int K[n+1][W+1];</p>
+<p>for (i = 0; i &lt;= n; i++) {
+for (w = 0; w &lt;= W; w++) {
+if (wt[i-1] &lt;= w){
+K[i][w] = max(val[i-1] + K[i-1][w-wt[i-1]], K[i-1][w]);
+}else{
+K[i][w] = K[i-1][w];
+}
+}
+}</p>
+<p>return K[n][W];
+}</p>
+</details>
+</blockquote>
+<p>Mas agora como fazemos para saber quais items foram escolhidos?</p>
+
+
+        </main>
+        <footer>
+            <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">
+                <img alt="CC BY-SA 4.0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" title="Creative Commons Attribution-ShareAlike 4.0 International License" />
+            </a>
+            © 2024 Marcelo Hashimoto
+        </footer>
+    </div>
+</body>
+
+</html>
