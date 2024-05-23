@@ -130,13 +130,13 @@ Vamos, agora, para um segundo subproblema, um pouco mais complexo.
 
 
 ??? Checkpoint:
-Considere somente o primerio item como disponível:
+Considere somente o primerio item como disponível (esse seria o segundo menor subproblema, um pouco mais complexo do que o primeiro, mas ainda fácil de se resolver):
 
 |Item    | Peso     | Valor     |
 |--------|----------|-----------|
 | **1**  | 2        | 10        |
 
-Incrementando em 1 kg a capacidade da mochila de 0 à capacidade da máxima (6), a partir de qual capacidade seria possível inserir esse item?
+Incrementando em 1 kg a capacidade da mochila de 0 à capacidade máxima (6), a partir de qual capacidade seria possível inserir esse item?
 
 ::: Resposta:
 
@@ -147,17 +147,27 @@ O item pode ser inserido quando `a capacidade >= peso do item (2)`, ou seja, a p
 ???
 
 
-Assim, podemos começar a popular a nossa tabela ("i" linhas por "j" colunas). Para isso, precisamos deixar algumas coisas claras antes.
+Assim, podemos começar a popular a nossa tabela ("i" linhas por "j" colunas). É ela que vai nos ajudar a armazenar os resultados anteriores, fazer as devidas comparações e selecionar quais itens devem ser inseridos. Nela, uma linha i representa todos os itens disponíveis 1 até i, excluindo os outros para a resolução do subproblema em questão. Uma coluna j representa a capacidade da mochila do subproblema em questão. Para popular a tabela e resolver os problemas menores, precisamos deixar algumas coisas claras antes.
 
-Antes de mais nada (vamos reforçar, mas já deve estar claro aqui), quando se tem um item, só existem 2 opções a serem realizadas: incluir o item na mochila, ou não. Com isso em mente, devemos agora comparar o máximo valor que se consegue obter com e sem o item, para ver se vale a pena sua inserção.
+Antes de mais nada (vamos reforçar, mas já deve estar claro aqui), quando se tem um item, só existem 2 opções a serem realizadas: incluir o item na mochila, ou não. Com isso em mente, devemos agora comparar o máximo valor que se consegue obter inserindo ou não inserindo o item, para ver se vale a pena sua inserção.
 
-Começando pelo caso mais simples - o máximo valor que se consegue obter sem o item (vamos chamar ele de item "i"). Esse valor vai ser encontrado na linha i-1, coluna j. A razão disso é a seguinte: o máximo valor que conseguimos obter com os itens 1, 2, 3, ... i, é obviamente o mesmo valor máximo que conseguimos com os itens 1, 2, 3, ... i, se escolhermos **não** incluir o item "i". Pare e pense nisso por um momento - sim, é bastante informação.
+Para simplificar, pense no seguinte problema rápido:
+
+|Item    | Peso     | Valor     |
+|--------|----------|-----------|
+| **1**  | 1        | 1         |
+| **2**  | 3        | 4         |
+| **3**  | 4        | 5         |
+
+Em uma mochila com capacidade máxima de 5 kg  e com esses três itens acima disponíveis, não vai valer a pena colocar o item 3, certo? Mesmo que ele caiba na capacidade da mochila. Existe uma combinação melhor, dos itens 1 e 2. Então, afinal de contas, não vamos somente inserir o elemento se ele couber na mochila. Temos que pensar em outras possibilidades de combinações para verificar qual vale mais a pena. Ah, e essas possibilidades vêm de onde? Sim, dos subproblemas que vamos resolvendo e guardando os resultados.
+
+Começando pelo caso mais simples - o máximo valor que se consegue obter sem o item (vamos chamar ele de item "i"). Esse valor vai ser encontrado na linha i-1, coluna j. A razão disso é a seguinte: o máximo valor que conseguimos obter com os itens 1, 2, 3, ... i, é obviamente o mesmo valor máximo que conseguimos com os itens 1, 2, 3, ... i - 1, se escolhermos **não** incluir o item "i". Pare e pense nisso por um momento - sim, é bastante informação.
 
 Pronto para o próximo caso?
 
 Agora, precisamos calcular qual é o máximo valor que conseguimos obter incluindo o item "i". Para isso, precisamos comparar o peso do item "i" com a capacidade da mochila. Obviamente, se o peso do item "i" for maior do que a capacidade, não podemos incluir ele. Assim, a solução para esse subproblema é simplesmente o máximo valor que se consegue obter sem o item "i" (ou seja, o valor da linha de cima, na mesma coluna).
 
-Porém, suponha que o item "i" pese menos do que a capacidade da mochila. Nesse caso, temos a opção de incluí-lo, se ele potencialmente aumentar máximo valor obtido. Esse máximo valor obtido com a inclusão do item "i" é o **próprio valor do item "i" + o máximo valor que se consegue obter com o resto da capacidade da mochila**. Difícil?
+Porém, suponha que o item "i" pese menos do que a capacidade da mochila. Nesse caso, temos a opção de incluí-lo, se ele potencialmente aumentar o máximo valor obtido. Esse máximo valor obtido com a inclusão do item "i" é o **próprio valor do item "i" + o máximo valor que se consegue obter com o resto da capacidade da mochila**. Difícil?
 
 Vamos para um exemplo para deixar isso mais claro.
 
@@ -411,12 +421,12 @@ void mochila_binaria(int capacidade, int pesos[], int valores[], int n) {
 Código feito! Esse algoritmo é muito mais eficiente do que o da força bruta. Já usamos a programação dinâmica em uma APS!
 
 ??? Vamos lá, agora um pouco mais complexo.
-Tente entender qual a complexidade do pseudocódigo acima.
+Tente entender qual a complexidade do código do algoritmo de programação dinâmica acima.
 
 Dica: O que vamos preencher para armazenar os valores?
 
 ::: Resposta:
-Se você pensou em O(nXw), sendo n o número de itens e w a capacidade, você está correto. É um algotirmo bem melhor.
+Se você pensou em O(nXw), sendo n o número de itens e w a capacidade, você está correto. É um algotirmo bem melhor do que o da força bruta.
 :::
 
 ???

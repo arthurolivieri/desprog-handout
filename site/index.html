@@ -175,7 +175,7 @@
 <p>Vamos, agora, para um segundo subproblema, um pouco mais complexo.</p>
 <blockquote class="question">
 <p>Checkpoint:</p>
-<p>Considere somente o primerio item como disponível:</p>
+<p>Considere somente o primerio item como disponível (esse seria o segundo menor subproblema, um pouco mais complexo do que o primeiro, mas ainda fácil de se resolver):</p>
 <figure class="table"><table>
 <thead>
 <tr>
@@ -192,13 +192,47 @@
 </tr>
 </tbody>
 </table></figure>
-<p>Incrementando em 1 kg a capacidade da mochila de 0 à capacidade da máxima (6), a partir de qual capacidade seria possível inserir esse item?</p>
+<p>Incrementando em 1 kg a capacidade da mochila de 0 à capacidade máxima (6), a partir de qual capacidade seria possível inserir esse item?</p>
 <details class="answer">
 <summary>Resposta:</summary>
 <p>O item pode ser inserido quando <code class="language-a">capacidade &gt;= peso do item (2)</code>, ou seja, a partir da capacidade de 2kg. Guarde novamente na memória!</p>
 </details>
 </blockquote>
-<p>Está com a memória boa? Lembra que falei que as próximas soluções vão depender das anteriores? Bom, vamos montar uma tabela que contenha as soluções anteriores. Essa eu vou dar de mão beijada, mas nas próximas você terá que fazer.</p>
+<p>Assim, podemos começar a popular a nossa tabela (“i” linhas por “j” colunas). É ela que vai nos ajudar a armazenar os resultados anteriores, fazer as devidas comparações e selecionar quais itens devem ser inseridos. Nela, uma linha i representa todos os itens disponíveis 1 até i, excluindo os outros para a resolução do subproblema em questão. Uma coluna j representa a capacidade da mochila do subproblema em questão. Para popular a tabela e resolver os problemas menores, precisamos deixar algumas coisas claras antes.</p>
+<p>Antes de mais nada (vamos reforçar, mas já deve estar claro aqui), quando se tem um item, só existem 2 opções a serem realizadas: incluir o item na mochila, ou não. Com isso em mente, devemos agora comparar o máximo valor que se consegue obter inserindo ou não inserindo o item, para ver se vale a pena sua inserção.</p>
+<p>Para simplificar, pense no seguinte problema rápido:</p>
+<figure class="table"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Peso</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>4</td>
+<td>5</td>
+</tr>
+</tbody>
+</table></figure>
+<p>Em uma mochila com capacidade máxima de 5 kg  e com esses três itens acima disponíveis, não vai valer a pena colocar o item 3, certo? Mesmo que ele caiba na capacidade da mochila. Existe uma combinação melhor, dos itens 1 e 2. Então, afinal de contas, não vamos somente inserir o elemento se ele couber na mochila. Temos que pensar em outras possibilidades de combinações para verificar qual vale mais a pena. Ah, e essas possibilidades vêm de onde? Sim, dos subproblemas que vamos resolvendo e guardando os resultados.</p>
+<p>Começando pelo caso mais simples - o máximo valor que se consegue obter sem o item (vamos chamar ele de item “i”). Esse valor vai ser encontrado na linha i-1, coluna j. A razão disso é a seguinte: o máximo valor que conseguimos obter com os itens 1, 2, 3, … i, é obviamente o mesmo valor máximo que conseguimos com os itens 1, 2, 3, … i - 1, se escolhermos <strong>não</strong> incluir o item “i”. Pare e pense nisso por um momento - sim, é bastante informação.</p>
+<p>Pronto para o próximo caso?</p>
+<p>Agora, precisamos calcular qual é o máximo valor que conseguimos obter incluindo o item “i”. Para isso, precisamos comparar o peso do item “i” com a capacidade da mochila. Obviamente, se o peso do item “i” for maior do que a capacidade, não podemos incluir ele. Assim, a solução para esse subproblema é simplesmente o máximo valor que se consegue obter sem o item “i” (ou seja, o valor da linha de cima, na mesma coluna).</p>
+<p>Porém, suponha que o item “i” pese menos do que a capacidade da mochila. Nesse caso, temos a opção de incluí-lo, se ele potencialmente aumentar o máximo valor obtido. Esse máximo valor obtido com a inclusão do item “i” é o <strong>próprio valor do item “i” + o máximo valor que se consegue obter com o resto da capacidade da mochila</strong>. Difícil?</p>
+<p>Vamos para um exemplo para deixar isso mais claro.</p>
 <figure class="img"><img src="img/tabela1exemplo.png" alt=""></figure>
 <p>Na tabela a primeira linha se refere ao peso, podendo variar de 0 até a capacidade máxima, que no nosso caso seria 6, e na primeira coluna temos a quantidade de itens ordenados disponíveis.</p>
 <p>Vamos avançar um pouco mais agora.</p>
@@ -229,7 +263,7 @@
 <p>Você consegue montar uma nova tabela considerando o 2º item? faça isso!</p>
 <details class="answer">
 <summary>Resposta:</summary>
-<figure class="img"><img src="img/tabela2exemplo.png" alt=""></figure>
+<div class="animation"><img class="frame" src="img/Linha2/Captura%20de%20tela%202024-05-23%20174918.png" alt="1"><img class="frame" src="img/Linha2/Captura%20de%20tela%202024-05-23%20174933.png" alt="2"><img class="frame" src="img/Linha2/Captura%20de%20tela%202024-05-23%20174941.png" alt="3"><img class="frame" src="img/Linha2/Captura%20de%20tela%202024-05-23%20174948.png" alt="4"><img class="frame" src="img/Linha2/Captura%20de%20tela%202024-05-23%20174957.png" alt="5"><img class="frame" src="img/Linha2/Captura%20de%20tela%202024-05-23%20175005.png" alt="6"><img class="frame" src="img/Linha2/Captura%20de%20tela%202024-05-23%20175011.png" alt="7"><img class="frame" src="img/Linha2/Captura%20de%20tela%202024-05-23%20175021.png" alt="8"></div>
 <p>Veja que a partir do número 3 você pode colocar os dois itens diponíveis, já que a soma de seus pesos resulta exatamente em 3kg.</p>
 </details>
 </blockquote>
@@ -276,7 +310,7 @@
 <p>Monte como ficaria a tabela dos maiores valores possíveis para cada situação.</p>
 <details class="answer">
 <summary>Resposta:</summary>
-<div class="animation"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184521.png" alt="1"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184554.png" alt="2"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184600.png" alt="3"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184604.png" alt="4"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184612.png" alt="5"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184617.png" alt="6"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184623.png" alt="7"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184630.png" alt="8"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184709.png" alt="9"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184713.png" alt="10"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184717.png" alt="11"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184723.png" alt="12"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184727.png" alt="13"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184732.png" alt="14"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184736.png" alt="15"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184740.png" alt="16"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184744.png" alt="17"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184750.png" alt="18"><img class="frame" src="img/montagem/Captura%20de%20tela%202024-05-10%20184754.png" alt="19"><img class="frame" src="img/montagem/abaporu.png" alt="20"></div>
+<div class="animation"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175711.png" alt="1"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175718.png" alt="2"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175723.png" alt="3"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175727.png" alt="4"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175731.png" alt="5"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175737.png" alt="6"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175745.png" alt="7"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175751.png" alt="8"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175758.png" alt="9"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175802.png" alt="10"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175808.png" alt="11"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175812.png" alt="12"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175816.png" alt="13"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175819.png" alt="14"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175823.png" alt="15"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175828.png" alt="16"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175855.png" alt="17"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175905.png" alt="18"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175915.png" alt="19"><img class="frame" src="img/montagem046/Captura%20de%20tela%202024-05-23%20175921.png" alt="20"></div>
 </details>
 </blockquote>
 <h2>Transformando em código</h2>
@@ -457,11 +491,11 @@ void mochila_binaria(int capacidade, int pesos[], int valores[], int n) {
 <p>Código feito! Esse algoritmo é muito mais eficiente do que o da força bruta. Já usamos a programação dinâmica em uma APS!</p>
 <blockquote class="question">
 <p>Vamos lá, agora um pouco mais complexo.</p>
-<p>Tente entender qual a complexidade do pseudocódigo acima.</p>
+<p>Tente entender qual a complexidade do código do algoritmo de programação dinâmica acima.</p>
 <p>Dica: O que vamos preencher para armazenar os valores?</p>
 <details class="answer">
 <summary>Resposta:</summary>
-<p>Se você pensou em O(nXw), sendo n o número de itens e w a capacidade, você está correto. É um algotirmo bem melhor.</p>
+<p>Se você pensou em O(nXw), sendo n o número de itens e w a capacidade, você está correto. É um algotirmo bem melhor do que o da força bruta.</p>
 </details>
 </blockquote>
 <p>FIM</p>
